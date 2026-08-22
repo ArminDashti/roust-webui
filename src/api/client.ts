@@ -26,7 +26,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     ...(options.headers as Record<string, string> | undefined),
   }
 
-  const res = await fetch(`/api${path}`, { ...options, headers })
+  const base = import.meta.env.BASE_URL || '/'
+  const apiRoot = `${base.endsWith('/') ? base : `${base}/`}api`
+  const res = await fetch(`${apiRoot}${path}`, { ...options, headers })
 
   if (!res.ok) {
     const body = (await res.json().catch(() => ({ error: res.statusText }))) as {
